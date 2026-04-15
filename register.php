@@ -49,6 +49,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
         if (strlen($password) < 12)
             {
-                
+                $errors[] = "Password needs to be at least 12 characters";
+            }
+
+
+
+        if (empty($errors))
+            {
+                $sql = "SELECT id FROM users WHERE username = :username OR email = :email";
+
+                $stmt = $pdo->prepare($sql);
+
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':email', $email);
+
+                $stmt->execute();
+
+                if ($stmt->fetch())
+                    {
+                        $errors[] = "The username and email is already used";
+                    }
+            }
+
+        
+
+
+        if (empty($errors))
+            {
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+                $sql = "INSERT INTO users (username, email, password) VALUES (:username, :email, :password) ";
+
+                $stmt = $pdo->prepare($sql);
+
+
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':password', $password);
+
+                $stmt->execute();
+
+                $success = "Account has been created, you can log in now";
             }
     }
+
+    ?>
