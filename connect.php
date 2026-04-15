@@ -1,0 +1,18 @@
+<?php
+
+$host = "localhost";
+$db = "finals";
+$user = "root";
+$password = "";
+
+$dsn = "mysql:host=$host;dbname=$db";
+
+
+try 
+{
+    $pdo = new PDO($dsn, $user, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) 
+{
+    die("Failed to connect to the database:" . $e->getMessage());
+}
